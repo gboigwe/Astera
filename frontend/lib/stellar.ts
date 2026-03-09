@@ -3,7 +3,7 @@ import {
   TransactionBuilder,
   BASE_FEE,
   Contract,
-  SorobanRpc,
+  rpc as StellarRpc,
   scValToNative,
   nativeToScVal,
   Address,
@@ -19,7 +19,7 @@ export const INVOICE_CONTRACT_ID = process.env.NEXT_PUBLIC_INVOICE_CONTRACT_ID ?
 export const POOL_CONTRACT_ID = process.env.NEXT_PUBLIC_POOL_CONTRACT_ID ?? "";
 export const USDC_TOKEN_ID = process.env.NEXT_PUBLIC_USDC_TOKEN_ID ?? "";
 
-export const rpc = new SorobanRpc.Server(RPC_URL);
+export const rpc = new StellarRpc.Server(RPC_URL);
 
 /** Convert USDC amount (human) to stroops (7 decimals) */
 export function toStroops(amount: number): bigint {
@@ -66,7 +66,7 @@ export async function simulateTx(
   method: string,
   args: xdr.ScVal[],
   sourceAddress: string
-): Promise<SorobanRpc.Api.SimulateTransactionResponse> {
+): Promise<StellarRpc.Api.SimulateTransactionResponse> {
   const account = await rpc.getAccount(sourceAddress);
   const contract = new Contract(contractId);
 

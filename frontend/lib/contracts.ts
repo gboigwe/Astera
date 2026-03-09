@@ -13,7 +13,7 @@ import {
   TransactionBuilder,
   BASE_FEE,
   Contract,
-  SorobanRpc,
+  rpc as StellarRpc,
 } from "@stellar/stellar-sdk";
 import type { Invoice, InvestorPosition, PoolConfig, FundedInvoice } from "./types";
 
@@ -28,7 +28,7 @@ export async function getInvoice(id: number): Promise<Invoice> {
     "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN"
   );
 
-  const result = (sim as SorobanRpc.Api.SimulateTransactionSuccessResponse).result;
+  const result = (sim as StellarRpc.Api.SimulateTransactionSuccessResponse).result;
   return scValToNative(result!.retval) as Invoice;
 }
 
@@ -40,7 +40,7 @@ export async function getInvoiceCount(): Promise<number> {
     "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN"
   );
 
-  const result = (sim as SorobanRpc.Api.SimulateTransactionSuccessResponse).result;
+  const result = (sim as StellarRpc.Api.SimulateTransactionSuccessResponse).result;
   return Number(scValToNative(result!.retval));
 }
 
@@ -72,11 +72,11 @@ export async function buildCreateInvoiceTx(params: {
     .build();
 
   const sim = await rpc.simulateTransaction(tx);
-  if (SorobanRpc.Api.isSimulationError(sim)) {
+  if (StellarRpc.Api.isSimulationError(sim)) {
     throw new Error(`Simulation failed: ${sim.error}`);
   }
 
-  const prepared = SorobanRpc.assembleTransaction(tx, sim).build();
+  const prepared = StellarRpc.assembleTransaction(tx, sim).build();
   return prepared.toXDR();
 }
 
@@ -90,7 +90,7 @@ export async function getPoolConfig(): Promise<PoolConfig> {
     "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN"
   );
 
-  const result = (sim as SorobanRpc.Api.SimulateTransactionSuccessResponse).result;
+  const result = (sim as StellarRpc.Api.SimulateTransactionSuccessResponse).result;
   const raw = scValToNative(result!.retval) as Record<string, unknown>;
 
   return {
@@ -114,7 +114,7 @@ export async function getInvestorPosition(
     "GAAZI4TCR3TY5OJHCTJC2A4QSY6CJWJH5IAJTGKIN2ER7LBNVKOCCWN"
   );
 
-  const result = (sim as SorobanRpc.Api.SimulateTransactionSuccessResponse).result;
+  const result = (sim as StellarRpc.Api.SimulateTransactionSuccessResponse).result;
   const raw = scValToNative(result!.retval);
   if (!raw) return null;
 
@@ -147,11 +147,11 @@ export async function buildDepositTx(investor: string, amount: bigint): Promise<
     .build();
 
   const sim = await rpc.simulateTransaction(tx);
-  if (SorobanRpc.Api.isSimulationError(sim)) {
+  if (StellarRpc.Api.isSimulationError(sim)) {
     throw new Error(`Simulation failed: ${sim.error}`);
   }
 
-  const prepared = SorobanRpc.assembleTransaction(tx, sim).build();
+  const prepared = StellarRpc.assembleTransaction(tx, sim).build();
   return prepared.toXDR();
 }
 
@@ -174,11 +174,11 @@ export async function buildWithdrawTx(investor: string, amount: bigint): Promise
     .build();
 
   const sim = await rpc.simulateTransaction(tx);
-  if (SorobanRpc.Api.isSimulationError(sim)) {
+  if (StellarRpc.Api.isSimulationError(sim)) {
     throw new Error(`Simulation failed: ${sim.error}`);
   }
 
-  const prepared = SorobanRpc.assembleTransaction(tx, sim).build();
+  const prepared = StellarRpc.assembleTransaction(tx, sim).build();
   return prepared.toXDR();
 }
 
